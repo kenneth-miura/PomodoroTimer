@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
+import RatingModal from "./RatingModal";
 
 const minutesToMilliseconds = minutes => {
   return minutes * 60000;
@@ -83,17 +83,7 @@ export default function PomodoroTimer(props) {
           {timerRunning ? "Stop" : "Start"}
         </Button>
       </Row>
-      <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title> Modal heading</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>WOOOO MODAL BODY TEXT LETS GO</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+    <RatingModal showModal={showModal} onCloseModal={handleCloseModal}></RatingModal>
     </Container>
   );
 }
