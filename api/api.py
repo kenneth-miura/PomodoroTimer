@@ -20,13 +20,17 @@ def store_ratings():
 			engagement = json_data['engagement']
 			energy = json_data['energy']
 			in_flow = json_data['inFlow']
-			conn = mysql.connect()
-			cursor = conn.cursor()
-			cursor.execute(f''' INSERT INTO ratings
-			(engagement, energy, in_flow, time_rated)
-			VALUES ({engagement}, {energy}, {in_flow}, NOW());
-			''')
-			conn.commit()
-			cursor.close()
-			conn.close()
-			return json_data
+			try:
+				conn = mysql.connect()
+				cursor = conn.cursor()
+				cursor.execute(f''' INSERT INTO ratings
+				(engagement, energy, in_flow, time_rated)
+				VALUES ({engagement}, {energy}, {in_flow}, NOW());
+				''')
+				conn.commit()
+				return json_data
+			except Exception as e:
+				return json.dumps({'error': str(e)})
+			finally:
+				cursor.close()
+				conn.close()
