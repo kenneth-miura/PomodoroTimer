@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
 import RatingModal from "./RatingModal";
 
 const minutesToMilliseconds = minutes => {
@@ -48,28 +49,31 @@ export default function PomodoroTimer(props) {
   return (
     <Container>
       <Row>
-        <Button
-          variant="primary"
-          onClick={() => {
-            setTimerStart(
-              Date.now() + minutesToMilliseconds(props.pomodoroDuration)
-            );
-            setTimerRunning(true);
-          }}
-        >
-          Pomodoro
-        </Button>
-        <Button
-          variant="primary"
-          onClick={() => {
-            setTimerStart(
-              Date.now() + minutesToMilliseconds(props.breakDuration)
-            );
-            setTimerRunning(true);
-          }}
-        >
-          Break
-        </Button>
+        <ButtonGroup aria-label="Basic example">
+          {" "}
+          <Button
+            variant="primary"
+            onClick={() => {
+              setTimerStart(
+                Date.now() + minutesToMilliseconds(props.pomodoroDuration)
+              );
+              setTimerRunning(true);
+            }}
+          >
+            Pomodoro
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              setTimerStart(
+                Date.now() + minutesToMilliseconds(props.breakDuration)
+              );
+              setTimerRunning(true);
+            }}
+          >
+            Break
+          </Button>
+        </ButtonGroup>
       </Row>
       <Row> {convertMillisecondsToTimeString(timeLeft)}</Row>
       <Row>
@@ -83,7 +87,10 @@ export default function PomodoroTimer(props) {
           {timerRunning ? "Stop" : "Start"}
         </Button>
       </Row>
-    <RatingModal showModal={showModal} onCloseModal={handleCloseModal}></RatingModal>
+      <RatingModal
+        showModal={showModal}
+        onCloseModal={handleCloseModal}
+      ></RatingModal>
     </Container>
   );
 }
