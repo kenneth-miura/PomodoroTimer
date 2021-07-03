@@ -1,7 +1,8 @@
 import time
 from flask import Flask, request
 from flaskext.mysql import MySQL
-import json
+from datetime import datetime, date, time, timedelta
+import simplejson as json
 
 app = Flask(__name__)
 app.config.from_object('config.Config')
@@ -41,7 +42,7 @@ def store_ratings():
         return 'Only accepts POST', 501
 
 
-@app.route('/all_ratings', methods=['GET'])
+@app.route('/all-ratings', methods=['GET'])
 def all_ratings():
     if request.method == 'GET':
         conn = mysql.connect()
@@ -49,10 +50,56 @@ def all_ratings():
         try:
             cursor.execute('''SELECT * FROM ratings;''')
             ratings = cursor.fetchall()
-            print(ratings)
             return {"all_ratings": ratings}, 200
         finally:
             cursor.close()
             conn.close()
     else:
         return 'Only accepts GET', 501
+
+
+@app.route('/weeks-ratings', methods=['GET'])
+def weeks_ratings():
+    print("running weeks-ratings")
+    if request.method == 'GET':
+        today = date.today()
+        week_start_date = datetime.combine(
+            today - timedelta(days=today.weekday()), time(0, 0))
+        week_end_date = datetime.combine(
+            week_start_date + timedelta(days=6), time(11, 59, 59))
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(
+                '''SELECT DAYNAME(time_rated) AS day,
+                AVG(engagement) AS avg_engagement, AVG(energy) AS avg_energy, AVG(in_flow) AS avg_in_flow
+                FROM ratings WHERE time_rated >=%(week_start_date)s AND time_rated <%(week_end_date)s
+                GROUP BY DAYNAME(time_rated);''',
+                {"week_start_date": week_start_date, "week_end_date": week_end_date})
+            weeks_ratings = cursor.fetchall()
+            return json.dumps({"weeks_ratings": weeks_ratings}), 200
+        finally:
+            cursor.close()
+            conn.close()
+    else:
+        return '/weeks-rating only accepts GET requests', 501
+
+
+@app.route('/activity-ratings', methods=['GET'])
+def activity_ratings():
+    print("accesing activity ratings")
+    if request.method == 'GET':
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(
+                '''SELECT activity, AVG(engagement) AS avg_engagement, AVG(energy) AS avg_energy, AVG(in_flow) AS avg_in_flow
+                FROM ratings GROUP BY activity;'''
+            )
+            activity_ratings = cursor.fetchall()
+            return json.dumps({'activity_ratings':activity_ratings}), 200
+        finally:
+            cursor.close()
+            conn.close()
+    else:
+        return '/activity-ratings only accepts GET requests', 501
