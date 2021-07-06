@@ -66,7 +66,7 @@ def weeks_ratings():
         week_start_date = datetime.combine(
             today - timedelta(days=today.weekday()), time(0, 0))
         week_end_date = datetime.combine(
-            week_start_date + timedelta(days=6), time(11, 59, 59))
+            week_start_date + timedelta(days=7), time(0,0,0))
         conn = mysql.connect()
         cursor = conn.cursor()
         try:
@@ -83,6 +83,40 @@ def weeks_ratings():
             conn.close()
     else:
         return '/weeks-rating only accepts GET requests', 501
+
+@app.route('/day-ratings', methods=['GET'])
+def day_ratings():
+    print('running day ratings')
+    if request.method == 'GET':
+        today = date.today()
+        day_start = datetime.combine(today, time(0,0,0))
+        day_end = datetime.combine(today + timedelta(days=1), time(0,0,0))
+        print(day_start)
+        print(day_end)
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(
+                '''
+                SELECT TIME(time_rated) AS time, AVG(engagement) AS avg_engagement,
+                AVG(energy) AS avg_energy, AVG(in_flow) AS avg_in_flow
+                FROM ratings
+                WHERE time_rated >=%(day_start)s AND time_rated <%(day_end)s
+                GROUP BY time_rated;
+                ''', {"day_start": day_start, "day_end": day_end}
+            )
+            day_ratings = cursor.fetchall()
+            print("printing day_ratings")
+            print(day_ratings)
+            processed_day_ratings = []
+            for rating in day_ratings:
+                processed_day_ratings.append((str(rating[0]), rating[1], rating[2], rating[3]))
+            return json.dumps({"day_ratings": processed_day_ratings}), 200
+        finally:
+            cursor.close()
+            conn.close()
+    else:
+        return '/day-rating only accepts GET request', 501
 
 
 @app.route('/activity-ratings', methods=['GET'])

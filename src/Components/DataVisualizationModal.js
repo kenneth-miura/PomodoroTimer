@@ -8,6 +8,8 @@ import { useState, useEffect } from "react";
 import Rating from "../Util/Rating";
 import "./DataVisualizationModal.css";
 import TripleBarGraph from "./Graphs/TripleBarGraph";
+import DayScatterGraph from "./Graphs/DayScatterGraph";
+import ExampleScatterGraph from "./Graphs/ExampleScatterGraph";
 
 const barConfig = {
   avgEngagement: {
@@ -50,12 +52,15 @@ export default function DataVisualizationModal(props) {
   const [allRatings, setAllRatings] = useState([]);
   const [weeksRatings, setWeekRatings] = useState([]);
   const [activityRatings, setActivityRatings] = useState([]);
+  const [dayRatings, setDayRatings] = useState([]);
   // set in a useEffect
   useEffect(() => {
     fetchAllRatings(setAllRatings);
     fetchWeeksRatings(setWeekRatings);
     fetchActivityRatings(setActivityRatings);
+    fetchDayRatings(setDayRatings);
   }, []);
+  console.log(dayRatings);
   return (
     <Modal show={props.showModal} onHide={props.onCloseModal} size="xl">
       <Modal.Header closeButton>
@@ -69,12 +74,23 @@ export default function DataVisualizationModal(props) {
                 <Nav.Link eventKey="all-ratings">All Ratings</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="ratings-over-week">Weeks Ratings</Nav.Link>
+                <Nav.Link eventKey="ratings-over-week">
+                  This Weeks Ratings
+                </Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link eventKey="activity-ratings">
                   Activity Ratings
                 </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="ratings-over-day">
+                  {" "}
+                  Today's Ratings
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="energy-over-day"> Today's Energy</Nav.Link>
               </Nav.Item>
             </Nav>
           </Row>
@@ -97,6 +113,12 @@ export default function DataVisualizationModal(props) {
                     xAxisKey="activity"
                     barConfig={barConfig}
                   />
+                </Tab.Pane>
+                <Tab.Pane eventKey="ratings-over-day">
+                </Tab.Pane>
+                <Tab.Pane eventKey="energy-over-day">
+                  {/* <DayScatterGraph xAxisKey="time" xAxisName="Time" yAxisKey="energy" yAxisName="Energy" data={dayRatings}/> */}
+                  <ExampleScatterGraph/>
                 </Tab.Pane>
               </Tab.Content>
             </Col>
@@ -140,6 +162,26 @@ function fetchWeeksRatings(setWeekRatings) {
         avgInFlow: entry[3],
       }));
       setWeekRatings(weeksRatings);
+    });
+}
+
+function fetchDayRatings(setDayRatings) {
+  var weeksRatingUrl = "/day-ratings";
+
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  };
+  fetch(weeksRatingUrl, requestOptions)
+    .then(response => response.json())
+    .then(data => {
+      const dayRatings = data["day_ratings"].map(entry => ({
+        time: entry[0],
+        engagement: entry[1],
+        energy: entry[2],
+        inFlow: entry[3],
+      }));
+      setDayRatings(dayRatings);
     });
 }
 

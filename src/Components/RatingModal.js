@@ -13,7 +13,7 @@ const mapToRange = (value, newMin, newMax) => {
   );
 };
 const saveRatings = (engagement, energy, inFlow, activity) => {
-  if (activity.length === 0){
+  if (activity.length === 0) {
     activity = defaultActivity;
   }
   const requestOptions = {
@@ -37,6 +37,14 @@ export default function RatingModal(props) {
   const [energy, setEnergy] = useState(0);
   const [inFlow, setInFlow] = useState(false);
   const [activity, setActivity] = useState("None");
+
+  const boundSaveRatings = saveRatings.bind(
+    null,
+    engagement,
+    energy,
+    inFlow,
+    activity
+  );
 
   return (
     <Modal show={props.showModal} onHide={props.onCloseModal}>
@@ -83,7 +91,10 @@ export default function RatingModal(props) {
         </Button>
         <Button
           variant="secondary"
-          onClick={saveRatings.bind(null, engagement, energy, inFlow, activity)}
+          onClick={() => {
+            boundSaveRatings();
+            props.onCloseModal();
+          }}
         >
           Save
         </Button>
