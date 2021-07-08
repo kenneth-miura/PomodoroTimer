@@ -51,15 +51,19 @@ export default function DataVisualizationModal(props) {
   const [allRatings, setAllRatings] = useState([]);
   const [weeksRatings, setWeekRatings] = useState([]);
   const [activityRatings, setActivityRatings] = useState([]);
-  const [dayRatings, setDayRatings] = useState([]);
+  // not really sure if I should be doing 2 of these just to avoid splitting them in front-end
+  // come back later. switching is trivial.
+  const [inFlowDayRatings, setInFlowDayRatings] = useState([]);
+  const [notInFlowDayRatings, setNotInFlowDayRatings] = useState([]);
+
   // set in a useEffect
   useEffect(() => {
     fetchAllRatings(setAllRatings);
     fetchWeeksRatings(setWeekRatings);
     fetchActivityRatings(setActivityRatings);
-    fetchDayRatings(setDayRatings);
+    fetchInFlowDayRatings(setInFlowDayRatings);
+    fetchNotInFlowDayRatings(setNotInFlowDayRatings);
   }, []);
-  console.log(dayRatings);
   return (
     <Modal show={props.showModal} onHide={props.onCloseModal} size="xl">
       <Modal.Header closeButton>
@@ -116,14 +120,16 @@ export default function DataVisualizationModal(props) {
                   <DayScatterGraph
                     yAxisKey="engagement"
                     yAxisName="Engagement"
-                    data={dayRatings}
+                    inFlowData={inFlowDayRatings}
+                    notInFlowData={notInFlowDayRatings}
                   />
                 </Tab.Pane>
                 <Tab.Pane eventKey="energy-over-day">
                   <DayScatterGraph
                     yAxisKey="energy"
                     yAxisName="Energy"
-                    data={dayRatings}
+                    inFlowData={inFlowDayRatings}
+                    notInFlowData={notInFlowDayRatings}
                   />
                 </Tab.Pane>
               </Tab.Content>
@@ -171,8 +177,11 @@ function fetchWeeksRatings(setWeekRatings) {
     });
 }
 
-function fetchDayRatings(setDayRatings) {
-  var weeksRatingUrl = "/day-ratings";
+function fetchInFlowDayRatings(setInFlowDayRatings) {
+  var weeksRatingUrl = "/day-ratings?" + new URLSearchParams({
+    'get_in_flow': true
+  });
+  console.log({weeksRatingUrl});
 
   const requestOptions = {
     method: "GET",
@@ -187,7 +196,30 @@ function fetchDayRatings(setDayRatings) {
         energy: entry[2],
         inFlow: entry[3],
       }));
-      setDayRatings(dayRatings);
+      setInFlowDayRatings(dayRatings);
+    });
+}
+
+function fetchNotInFlowDayRatings(setNotInFlowDayRatings) {
+  var weeksRatingUrl = "/day-ratings?" + new URLSearchParams({
+    'get_in_flow': false
+  });
+  console.log({weeksRatingUrl});
+
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  };
+  fetch(weeksRatingUrl, requestOptions)
+    .then(response => response.json())
+    .then(data => {
+      const dayRatings = data["day_ratings"].map(entry => ({
+        timeInMS: parseInt(entry[0]),
+        engagement: entry[1],
+        energy: entry[2],
+        inFlow: entry[3],
+      }));
+      setNotInFlowDayRatings(dayRatings);
     });
 }
 

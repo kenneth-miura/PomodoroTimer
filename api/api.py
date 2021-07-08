@@ -60,7 +60,6 @@ def all_ratings():
 
 @app.route('/weeks-ratings', methods=['GET'])
 def weeks_ratings():
-    print("running weeks-ratings")
     if request.method == 'GET':
         today = date.today()
         week_start_date = datetime.combine(
@@ -86,13 +85,12 @@ def weeks_ratings():
 
 @app.route('/day-ratings', methods=['GET'])
 def day_ratings():
-    print('running day ratings')
     if request.method == 'GET':
+        get_in_flow_only = 1 if request.args.get('get_in_flow') =="true" else 0
+        print(get_in_flow_only)
         today = date.today()
         day_start = datetime.combine(today, time(0,0,0))
         day_end = datetime.combine(today + timedelta(days=1), time(0,0,0))
-        print(day_start)
-        print(day_end)
         conn = mysql.connect()
         cursor = conn.cursor()
         try:
@@ -101,13 +99,11 @@ def day_ratings():
                 SELECT (UNIX_TIMESTAMP(time_rated) * 1000) AS time_rated_ms, AVG(engagement) AS avg_engagement,
                 AVG(energy) AS avg_energy, AVG(in_flow) AS avg_in_flow
                 FROM ratings
-                WHERE time_rated >=%(day_start)s AND time_rated <%(day_end)s
+                WHERE time_rated >=%(day_start)s AND time_rated <%(day_end)s AND in_flow=%(get_in_flow_only)s
                 GROUP BY time_rated;
-                ''', {"day_start": day_start, "day_end": day_end}
+                ''', {"day_start": day_start, "day_end": day_end, "get_in_flow_only":get_in_flow_only}
             )
             day_ratings = cursor.fetchall()
-            print("printing day_ratings")
-            print(day_ratings)
             processed_day_ratings = []
             for rating in day_ratings:
                 processed_day_ratings.append((str(rating[0]), rating[1], rating[2], rating[3]))
@@ -121,7 +117,6 @@ def day_ratings():
 
 @app.route('/activity-ratings', methods=['GET'])
 def activity_ratings():
-    print("accesing activity ratings")
     if request.method == 'GET':
         conn = mysql.connect()
         cursor = conn.cursor()

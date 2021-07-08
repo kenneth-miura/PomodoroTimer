@@ -8,13 +8,17 @@ import {
   Tooltip,
   ResponsiveContainer,
   Label,
-  ReferenceLine
+  ReferenceLine,
+  Legend
 } from "recharts";
 import moment from "moment";
 
 //primarily based off https://github.com/recharts/recharts/issues/1028 (USE THIS)
 
 const CustomTooltip = ({ active, payload, label }) => {
+  console.log({ active });
+  console.log({ payload });
+  console.log({ label });
   if (active && payload && payload.length) {
     let timestamp = moment(payload[0]["value"]).format("HH:mm");
     return (
@@ -88,17 +92,32 @@ export default class DayScatterGraph extends PureComponent {
             interval={0}
             ticks={this.state.ticks}
           >
-            <Label value="Hour" offset={-5} position="insideBottom"></Label>
+            <Label value="Hour" offset={-3} position="insideBottom"></Label>
           </XAxis>
-          <YAxis type="number" dataKey={this.props.yAxisKey} name={this.props.yAxisName}>
-            <Label value={this.props.yAxisName} angle={-90} position="left"/>
+          <XAxis name="inflow" dataKey="inFlow" hide={true} />
+          <YAxis
+            type="number"
+            dataKey={this.props.yAxisKey}
+            name={this.props.yAxisName}
+          >
+            <Label value={this.props.yAxisName} angle={-90} position="left" />
           </YAxis>
           <Tooltip
             cursor={{ strokeDasharray: "3 3" }}
             content={<CustomTooltip />}
           />
-          <Scatter data={this.props.data} fill="#8884d8" />
+          <Scatter
+            name="In Flow"
+            data={this.props.inFlowData}
+            fill="#FF12FF"
+          />
+          <Scatter
+            name="Not In Flow"
+            data={this.props.notInFlowData}
+            fill="#17FF1F"
+          />
           <ReferenceLine y={0} stroke="#000" />
+          <Legend/>
         </ScatterChart>
       </ResponsiveContainer>
     );
