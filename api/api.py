@@ -98,7 +98,7 @@ def day_ratings():
         try:
             cursor.execute(
                 '''
-                SELECT TIME(time_rated) AS time, AVG(engagement) AS avg_engagement,
+                SELECT (UNIX_TIMESTAMP(time_rated) * 1000) AS time_rated_ms, AVG(engagement) AS avg_engagement,
                 AVG(energy) AS avg_energy, AVG(in_flow) AS avg_in_flow
                 FROM ratings
                 WHERE time_rated >=%(day_start)s AND time_rated <%(day_end)s

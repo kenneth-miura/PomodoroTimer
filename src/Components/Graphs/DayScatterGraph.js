@@ -1,19 +1,69 @@
-import React, { PureComponent } from 'react';
-import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import React, { PureComponent } from "react";
+import {
+  ScatterChart,
+  Scatter,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Label,
+  ReferenceLine
+} from "recharts";
+import moment from "moment";
 
-const data = [
-  { x: 100, a:100, y: 200, z: 200 },
-  { x: 120, a:100, y: 100, z: 260 },
-  { x: 170, a:100, y: 300, z: 400 },
-  { x: 140, a:100, y: 250, z: 280 },
-  { x: 150, a:100, y: 400, z: 500 },
-  { x: 110, a:100, y: 280, z: 200 },
-];
+//primarily based off https://github.com/recharts/recharts/issues/1028 (USE THIS)
 
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    let timestamp = moment(payload[0]["value"]).format("HH:mm");
+    return (
+      <div className="custom-tooltip">
+        <p className="label">{`Time:${timestamp}`}</p>
+      </div>
+    );
+  }
+  return null;
+};
 export default class DayScatterGraph extends PureComponent {
-  // include the behaviour with color changes depending on whether the activity was in flow or not
-  // include the be
+  constructor(props) {
+    super(props);
+    const today = new Date();
+    today.setHours(0);
+    today.setMinutes(0);
+    today.setSeconds(0);
+    const ticks = [];
+    for (let hour = 0; hour < 25; hour++) {
+      var tick = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+        hour,
+        0,
+        0
+      ).getTime();
+      ticks.push(tick);
+    }
+    let endOfDay = new Date();
+    endOfDay.setHours(23);
+    endOfDay.setMinutes(59);
+    endOfDay.setMinutes(59);
+    this.state = {
+      todayInMS: today.getTime(),
+      endOfDayInMS: endOfDay.getTime(),
+      ticks: ticks,
+    };
+  }
 
+  xAxisFormatter = tickItem => {
+    if (tickItem >= this.state.endOfDayInMS) {
+      return "24";
+    } else {
+      return moment(tickItem).format("HH");
+    }
+  };
+
+  // look into tickformatter
   render() {
     return (
       <ResponsiveContainer width="100%" height={600}>
@@ -28,12 +78,30 @@ export default class DayScatterGraph extends PureComponent {
           }}
         >
           <CartesianGrid />
-          <XAxis type="number" dataKey={this.props.xAxisKey} name={this.props.xAxisName}  />
-          <YAxis type="number" dataKey={this.props.yAxisKey} name={this.props.yAxisName}/>
-          <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+          <XAxis
+            type="number"
+            dataKey="timeInMS"
+            name="Time "
+            domain={[this.state.todayInMS, this.state.endOfDayInMS]}
+            tickFormatter={this.xAxisFormatter}
+            scale="time"
+            interval={0}
+            ticks={this.state.ticks}
+          >
+            <Label value="Hour" offset={-5} position="insideBottom"></Label>
+          </XAxis>
+          <YAxis type="number" dataKey={this.props.yAxisKey} name={this.props.yAxisName}>
+            <Label value={this.props.yAxisName} angle={-90} position="left"/>
+          </YAxis>
+          <Tooltip
+            cursor={{ strokeDasharray: "3 3" }}
+            content={<CustomTooltip />}
+          />
           <Scatter data={this.props.data} fill="#8884d8" />
+          <ReferenceLine y={0} stroke="#000" />
         </ScatterChart>
       </ResponsiveContainer>
     );
   }
+  //TODO: show the inflow stuff. Maybe change colour based on being inflowed
 }

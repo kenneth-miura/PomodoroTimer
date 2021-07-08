@@ -9,7 +9,6 @@ import Rating from "../Util/Rating";
 import "./DataVisualizationModal.css";
 import TripleBarGraph from "./Graphs/TripleBarGraph";
 import DayScatterGraph from "./Graphs/DayScatterGraph";
-import ExampleScatterGraph from "./Graphs/ExampleScatterGraph";
 
 const barConfig = {
   avgEngagement: {
@@ -84,9 +83,8 @@ export default function DataVisualizationModal(props) {
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="ratings-over-day">
-                  {" "}
-                  Today's Ratings
+                <Nav.Link eventKey="engagement-over-day">
+                  Today's Engagement
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
@@ -114,11 +112,19 @@ export default function DataVisualizationModal(props) {
                     barConfig={barConfig}
                   />
                 </Tab.Pane>
-                <Tab.Pane eventKey="ratings-over-day">
+                <Tab.Pane eventKey="engagement-over-day">
+                  <DayScatterGraph
+                    yAxisKey="engagement"
+                    yAxisName="Engagement"
+                    data={dayRatings}
+                  />
                 </Tab.Pane>
                 <Tab.Pane eventKey="energy-over-day">
-                  {/* <DayScatterGraph xAxisKey="time" xAxisName="Time" yAxisKey="energy" yAxisName="Energy" data={dayRatings}/> */}
-                  <ExampleScatterGraph/>
+                  <DayScatterGraph
+                    yAxisKey="energy"
+                    yAxisName="Energy"
+                    data={dayRatings}
+                  />
                 </Tab.Pane>
               </Tab.Content>
             </Col>
@@ -176,7 +182,7 @@ function fetchDayRatings(setDayRatings) {
     .then(response => response.json())
     .then(data => {
       const dayRatings = data["day_ratings"].map(entry => ({
-        time: entry[0],
+        timeInMS: parseInt(entry[0]),
         engagement: entry[1],
         energy: entry[2],
         inFlow: entry[3],
