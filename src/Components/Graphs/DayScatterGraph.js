@@ -9,16 +9,14 @@ import {
   ResponsiveContainer,
   Label,
   ReferenceLine,
-  Legend
+  Legend,
 } from "recharts";
+import NoDataAvailable from "./NoDataAvailable";
 import moment from "moment";
 
 //primarily based off https://github.com/recharts/recharts/issues/1028 (USE THIS)
 
 const CustomTooltip = ({ active, payload, label }) => {
-  console.log({ active });
-  console.log({ payload });
-  console.log({ label });
   if (active && payload && payload.length) {
     let timestamp = moment(payload[0]["value"]).format("HH:mm");
     return (
@@ -69,6 +67,10 @@ export default class DayScatterGraph extends PureComponent {
 
   // look into tickformatter
   render() {
+    if (this.props.inFlowData.length + this.props.notInFlowData === 0) {
+      return <NoDataAvailable message="Sorry! No ratings for today were found in the database!" />;
+    }
+
     return (
       <ResponsiveContainer width="100%" height={600}>
         <ScatterChart
@@ -106,18 +108,14 @@ export default class DayScatterGraph extends PureComponent {
             cursor={{ strokeDasharray: "3 3" }}
             content={<CustomTooltip />}
           />
-          <Scatter
-            name="In Flow"
-            data={this.props.inFlowData}
-            fill="#FF12FF"
-          />
+          <Scatter name="In Flow" data={this.props.inFlowData} fill="#FF12FF" />
           <Scatter
             name="Not In Flow"
             data={this.props.notInFlowData}
             fill="#17FF1F"
           />
           <ReferenceLine y={0} stroke="#000" />
-          <Legend/>
+          <Legend />
         </ScatterChart>
       </ResponsiveContainer>
     );

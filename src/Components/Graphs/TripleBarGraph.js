@@ -10,10 +10,16 @@ import {
   ReferenceLine,
   ResponsiveContainer,
 } from "recharts";
+import NoDataAvailable from "./NoDataAvailable";
+
 
 export default class TripleBarGraph extends PureComponent {
   render() {
     // TODO: figure out how to make the height responsive. Maybe just hardcode heights across various sizes
+    if (this.props.data.length === 0){
+      // prob need to pass this in from above. Since it's either activity (not really a timestep) or the week
+      return <NoDataAvailable message={this.props.noDataMessage}/>
+    }
     return (
       <ResponsiveContainer width="100%" height={600}>
         <BarChart

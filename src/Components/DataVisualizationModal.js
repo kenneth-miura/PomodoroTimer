@@ -9,7 +9,7 @@ import Rating from "../Util/Rating";
 import "./DataVisualizationModal.css";
 import TripleBarGraph from "./Graphs/TripleBarGraph";
 import DayScatterGraph from "./Graphs/DayScatterGraph";
-
+import NoDataAvailable from "./Graphs/NoDataAvailable";
 const barConfig = {
   avgEngagement: {
     name: "Average Engagement",
@@ -20,6 +20,9 @@ const barConfig = {
 };
 
 function allRatingsVisual(allRatings) {
+  if (allRatings.length === 0){
+    return <NoDataAvailable message="Sorry! No ratings found in the database"/>
+  }
   return (
     <Table striped bordered>
       <thead>
@@ -56,16 +59,16 @@ export default function DataVisualizationModal(props) {
   const [inFlowDayRatings, setInFlowDayRatings] = useState([]);
   const [notInFlowDayRatings, setNotInFlowDayRatings] = useState([]);
 
-  // set in a useEffect
-  useEffect(() => {
+  const onEnterModal = () => {
     fetchAllRatings(setAllRatings);
     fetchWeeksRatings(setWeekRatings);
     fetchActivityRatings(setActivityRatings);
     fetchInFlowDayRatings(setInFlowDayRatings);
     fetchNotInFlowDayRatings(setNotInFlowDayRatings);
-  }, []);
+  }
+
   return (
-    <Modal show={props.showModal} onHide={props.onCloseModal} size="xl">
+    <Modal show={props.showModal} onHide={props.onCloseModal} size="xl" onEnter={onEnterModal}>
       <Modal.Header closeButton>
         <Modal.Title> Data Visualization</Modal.Title>
       </Modal.Header>
@@ -107,6 +110,7 @@ export default function DataVisualizationModal(props) {
                     data={weeksRatings}
                     xAxisKey="day"
                     barConfig={barConfig}
+                    noDataMessage="Sorry! There are no ratings for this week found in the database!"
                   />
                 </Tab.Pane>
                 <Tab.Pane eventKey="activity-ratings">
@@ -114,6 +118,7 @@ export default function DataVisualizationModal(props) {
                     data={activityRatings}
                     xAxisKey="activity"
                     barConfig={barConfig}
+                    noDataMessage="Sorry! There are no ratings found in the database!"
                   />
                 </Tab.Pane>
                 <Tab.Pane eventKey="engagement-over-day">
@@ -181,7 +186,6 @@ function fetchInFlowDayRatings(setInFlowDayRatings) {
   var weeksRatingUrl = "/day-ratings?" + new URLSearchParams({
     'get_in_flow': true
   });
-  console.log({weeksRatingUrl});
 
   const requestOptions = {
     method: "GET",
@@ -204,7 +208,6 @@ function fetchNotInFlowDayRatings(setNotInFlowDayRatings) {
   var weeksRatingUrl = "/day-ratings?" + new URLSearchParams({
     'get_in_flow': false
   });
-  console.log({weeksRatingUrl});
 
   const requestOptions = {
     method: "GET",

@@ -52,7 +52,13 @@ export default function RatingModal(props) {
         <Modal.Title> Modal heading</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form>
+        <Form
+          onSubmit={event => {
+            event.preventDefault();
+            boundSaveRatings();
+            props.onCloseModal();
+          }}
+        >
           <Form.Group>
             <Form.Label> Activity Name</Form.Label>
             <Form.Control
