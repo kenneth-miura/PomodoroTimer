@@ -3,15 +3,11 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
-const [defaultRangeMin, defaultRangeMax] = [0, 100];
+import "./RatingModal.css";
+
+
 const defaultActivity = "None Specified";
-const mapToRange = (value, newMin, newMax) => {
-  return (
-    ((value - defaultRangeMin) / (defaultRangeMax - defaultRangeMin)) *
-      (newMax - newMin) +
-    newMin
-  );
-};
+
 const saveRatings = (engagement, energy, inFlow, activity) => {
   if (activity.length === 0) {
     activity = defaultActivity;
@@ -37,6 +33,8 @@ export default function RatingModal(props) {
   const [energy, setEnergy] = useState(0);
   const [inFlow, setInFlow] = useState(false);
   const [activity, setActivity] = useState("None");
+  const [sliderMin, sliderMax] = [-1,1];
+  const sliderStep = 0.05;
 
   const boundSaveRatings = saveRatings.bind(
     null,
@@ -69,12 +67,23 @@ export default function RatingModal(props) {
               }}
             />
             <Form.Label> Engagement</Form.Label>
-            <Form.Control
-              type="range"
-              onChange={event =>
-                setEngagement(mapToRange(+event.target.value, -1, 1))
-              }
-            />
+            <div className="slider">
+              <p>{sliderMin}</p>
+              <Form.Control
+                type="range"
+                onChange={event =>
+                  {
+                    console.log("engagement");
+                    console.log(+event.target.value)
+                    setEngagement(+event.target.value)
+                  }
+                }
+                min={sliderMin.toString()}
+                max={sliderMax.toString()}
+                step={sliderStep}
+              />
+              <p>{sliderMax}</p>
+            </div>
             <Form.Label> Flow </Form.Label>
             <Form.Check
               type="checkbox"
@@ -82,12 +91,23 @@ export default function RatingModal(props) {
               onChange={event => setInFlow(event.target.checked)}
             />
             <Form.Label>Energy</Form.Label>
-            <Form.Control
-              type="range"
-              onChange={event =>
-                setEnergy(mapToRange(+event.target.value, -1, 1))
-              }
-            />
+            <div className="slider">
+              <p>{sliderMin}</p>
+              <Form.Control
+                type="range"
+                onChange={event =>
+                  {
+                    console.log("energy");
+                    console.log(+event.target.value)
+                    setEnergy(+event.target.value)
+                  }
+                }
+                min={sliderMin.toString()}
+                max={sliderMax.toString()}
+                step={sliderStep}
+              />
+              <p>{sliderMax}</p>
+            </div>
           </Form.Group>
         </Form>
       </Modal.Body>

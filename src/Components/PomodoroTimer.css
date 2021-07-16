@@ -1,0 +1,10 @@
+.pomodoro-container{
+	background-color: var(--primary-color);
+
+}
+.pomodoro-timer{
+	font-size:100px;
+}
+.flex-item-right{
+	align-self:flex-end;
+}

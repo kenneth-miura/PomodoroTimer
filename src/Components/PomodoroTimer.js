@@ -4,6 +4,7 @@ import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import RatingModal from "./RatingModal";
+import "./PomodoroTimer.css";
 
 const minutesToMilliseconds = minutes => {
   return minutes * 60000;
@@ -47,11 +48,11 @@ export default function PomodoroTimer(props) {
   }, [timerRunning, timerStart]);
 
   return (
-    <Container>
-      <Row>
+    <Container className="pomodoro-container">
+      <Row className="centered-row">
         <ButtonGroup aria-label="Basic example">
-          {" "}
           <Button
+            className="custom-button"
             variant="primary"
             onClick={() => {
               setTimerStart(
@@ -63,6 +64,7 @@ export default function PomodoroTimer(props) {
             Pomodoro
           </Button>
           <Button
+            className="custom-button"
             variant="primary"
             onClick={() => {
               setTimerStart(
@@ -75,9 +77,10 @@ export default function PomodoroTimer(props) {
           </Button>
         </ButtonGroup>
       </Row>
-      <Row> {convertMillisecondsToTimeString(timeLeft)}</Row>
-      <Row>
+      <Row className="centered-row pomodoro-timer"> {convertMillisecondsToTimeString(timeLeft)}</Row>
+      <Row className="centered-row">
         <Button
+          className="custom-button"
           variant="primary"
           onClick={() => {
             setTimerStart(Date.now() + timeLeft);
