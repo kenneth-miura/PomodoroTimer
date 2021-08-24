@@ -27,3 +27,11 @@ SET time_zone = '+00:00';
 ```
 
 Then, create a copy of the file `api/config.py.examples` called `config.py`, and fill in the constants.
+
+# Running locally
+```bash
+# start api
+yarn start-api
+# start frontend
+yarn start
+```
