@@ -1,6 +1,6 @@
 .custom-button {
-	background-color: var(--dark-secondary-color);
-  border-color: var(--dark-secondary-color);
+	background-color: var(--light-accent);
+  border-color: var(--dark-accent);
 	font-size: x-large;
   width:max-content;
 }
@@ -26,5 +26,5 @@
 }
 
 body {
-  background-color: var(--background-color);
+  background-color: var(--dark-shade);
 }

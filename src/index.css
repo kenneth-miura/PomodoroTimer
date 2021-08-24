@@ -14,9 +14,9 @@ code {
 }
 
 :root {
-  --primary-color: #f48fb1;
-  --light-secondary-color:#ffc1e3;
-  --dark-secondary-color: #bf5f82;
-  --background-color:#E1E2E1;
-  --button-selected-color:#EC407A;
+  --primary-color: #999993;
+  --light-accent: #907e62;
+  --dark-accent: #73595e;
+  --light-shade: #f2f2f3;
+  --dark-shade: #2a242c;
 }
