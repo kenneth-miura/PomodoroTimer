@@ -1,11 +1,11 @@
 .custom-button {
-	background-color: var(--light-accent);
-  border-color: var(--dark-accent);
+	background-color: var(--dark-accent);
+  border-color: var(--dark-shade);
 	font-size: x-large;
   width:max-content;
 }
 .custom-button:hover {
-  background-color: var(--button-selected-color);
+  background-color: var(--light-accent);
   border-color: black;
 }
 .centered-row {
@@ -26,5 +26,5 @@
 }
 
 body {
-  background-color: var(--dark-shade);
+  background-color: var(--light-shade);
 }

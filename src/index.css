@@ -14,9 +14,9 @@ code {
 }
 
 :root {
-  --primary-color: #999993;
-  --light-accent: #907e62;
-  --dark-accent: #73595e;
-  --light-shade: #f2f2f3;
-  --dark-shade: #2a242c;
+  --primary-color: #3d6ba3;
+  --light-accent: #53bdc6;
+  --dark-accent: #6b6b8e;
+  --light-shade: #f4f3f3;
+  --dark-shade: #13141f;
 }
