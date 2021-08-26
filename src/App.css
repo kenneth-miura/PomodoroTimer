@@ -1,8 +1,10 @@
 .custom-button {
 	background-color: var(--dark-accent);
   border-color: var(--dark-shade);
+  color: var(--light-shade);
 	font-size: x-large;
   width:max-content;
+  height: max-content;
 }
 .custom-button:hover {
   background-color: var(--light-accent);
@@ -11,20 +13,26 @@
 .centered-row {
   justify-content: center;
 }
-.center-screen {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  min-height: 100vh;
+
+.drop-shadow {
+	filter:drop-shadow(0 0 0.25rem black);
 }
 
-.main {
-  display : flex;
-  flex-direction: column;
+#grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: minmax(100px, auto);
+  position: relative;
+  grid-template-areas:
+    ". . ."
+    ". . ."
+    ". . ."
 }
 
+.corner-button {
+  margin:20px;
+  border-color: transparent;
+}
 body {
   background-color: var(--light-shade);
 }

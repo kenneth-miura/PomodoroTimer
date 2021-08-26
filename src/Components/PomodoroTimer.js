@@ -48,7 +48,7 @@ export default function PomodoroTimer(props) {
   }, [timerRunning, timerStart]);
 
   return (
-    <Container className="pomodoro-container">
+    <Container className="pomodoro-container drop-shadow">
       <Row className="centered-row">
         <ButtonGroup aria-label="Basic example">
           <Button

@@ -91,7 +91,6 @@ export default class DayScatterGraph extends PureComponent {
             domain={[this.state.todayInMS, this.state.endOfDayInMS]}
             tickFormatter={this.xAxisFormatter}
             scale="time"
-            interval={0}
             ticks={this.state.ticks}
           >
             <Label value="Hour" offset={-3} position="insideBottom"></Label>

@@ -11,13 +11,13 @@ function App() {
   const [showDataModal, setShowDataModal] = useState(false);
 
   return (
-    <div className="main">
-        <Button
-          className="custom-button flex-item-right"
-          onClick={() => setShowDataModal(true)}
-        >
-          Data Visualization
-        </Button>
+    <div id="grid-container">
+          <Button
+            className="custom-button corner-button drop-shadow"
+            onClick={() => setShowDataModal(true)}
+          >
+            Data Visualization
+          </Button>
         <DataVisualizationModal showModal={showDataModal} onCloseModal={() => setShowDataModal(false)}></DataVisualizationModal>
         <Timer pomodoroDuration={52} breakDuration={0}></Timer>
     </div>
