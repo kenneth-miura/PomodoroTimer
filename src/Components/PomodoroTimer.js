@@ -47,6 +47,14 @@ export default function PomodoroTimer(props) {
     return () => clearInterval(intervalID);
   }, [timerRunning, timerStart]);
 
+  // update current time if duration is changed
+  useEffect(() => {
+    console.log("default timer duration changed")
+    setTimerStart(Date.now() + defaultTimerDuration);
+    setTimeLeft(defaultTimerDuration);
+    setTimerRunning(false);
+  }, [defaultTimerDuration])
+
   return (
     <Container className="pomodoro-container drop-shadow">
       <Row className="centered-row">

@@ -18,21 +18,25 @@
 	filter:drop-shadow(0 0 0.25rem black);
 }
 
-#grid-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-auto-rows: minmax(100px, auto);
-  position: relative;
-  grid-template-areas:
-    ". . ."
-    ". . ."
-    ". . ."
+.top-row {
+  display: flex;
+  justify-content: space-between
 }
 
 .corner-button {
   margin:20px;
   border-color: transparent;
 }
+
+svg {
+  width: 30px;
+  height: 30px;
+}
+
+svg:hover {
+  fill: var(--light-accent);
+}
+
 body {
   background-color: var(--light-shade);
 }

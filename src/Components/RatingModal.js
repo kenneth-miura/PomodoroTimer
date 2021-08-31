@@ -47,7 +47,7 @@ export default function RatingModal(props) {
   return (
     <Modal show={props.showModal} onHide={props.onCloseModal}>
       <Modal.Header closeButton>
-        <Modal.Title> Modal heading</Modal.Title>
+        <Modal.Title> Ratings</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form
