@@ -4,8 +4,8 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
 export default function SettingsModal(props) {
-  const [pomodoroDuration, setPomodoroDuration] = useState(props.defaultPomodoroDuration)
-  const [breakDuration, setBreakDuration] = useState(props.defaultBreakDuration);
+  const [pomodoroDuration, setPomodoroDuration] = useState(props.defaultPomodoro)
+  const [breakDuration, setBreakDuration] = useState(props.defaultBreak);
 
   return (
     <Modal show={props.showModal} onHide={props.onCloseModal}>

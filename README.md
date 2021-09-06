@@ -8,7 +8,7 @@ Create a database for this project by running the following commands in the mysq
 ```sql
 CREATE DATABASE pomodoro;
 ```
-
+### Main Table
 Run the following command in the database you just created.
 
 ```sql
@@ -25,6 +25,17 @@ Make sure to set the time-zone, relative to UTC:
 ```sql
 SET time_zone = '+00:00';
 ```
+
+### Activities Table
+
+```sql
+CREATE TABLE IF NOT EXISTS activities (
+	name TEXT
+);
+```
+
+This database stores all the options for activities to record engagement.
+
 
 Then, create a copy of the file `api/config.py.examples` called `config.py`, and fill in the constants.
 

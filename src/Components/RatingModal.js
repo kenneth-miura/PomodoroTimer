@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import { Select } from "react-bootstrap/Form";
 
 import "./RatingModal.css";
-
 
 const defaultActivity = "None Specified";
 
@@ -28,12 +28,30 @@ const saveRatings = (engagement, energy, inFlow, activity) => {
     .then(data => console.log(data));
 };
 
+const updateActivityList = setActivityList => {
+  console.log("updating activity list");
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  };
+  fetch("/all_activities", requestOptions)
+    .then(response => response.json())
+    .then(data => {
+      console.log({ data });
+      setActivityList(data["activities"]);
+    });
+};
+
 export default function RatingModal(props) {
   const [engagement, setEngagement] = useState(0);
   const [energy, setEnergy] = useState(0);
   const [inFlow, setInFlow] = useState(false);
   const [activity, setActivity] = useState("None");
-  const [sliderMin, sliderMax] = [-1,1];
+  const [activityList, setActivityList] = useState([]);
+
+  useEffect(() => updateActivityList(setActivityList), []);
+
+  const [sliderMin, sliderMax] = [-1, 1];
   const sliderStep = 0.05;
 
   const boundSaveRatings = saveRatings.bind(
@@ -60,24 +78,27 @@ export default function RatingModal(props) {
           <Form.Group>
             <Form.Label> Activity Name</Form.Label>
             <Form.Control
-              type="text"
-              placeholder="Your Activity"
+              as="select"
+              aria-label="select"
               onChange={event => {
                 setActivity(event.target.value);
               }}
-            />
+            >
+              <option>Select option</option>
+              {activityList.map(activity => {
+                return <option>{activity}</option>;
+              })}
+            </Form.Control>
             <Form.Label> Engagement</Form.Label>
             <div className="slider">
               <p>{sliderMin}</p>
               <Form.Control
                 type="range"
-                onChange={event =>
-                  {
-                    console.log("engagement");
-                    console.log(+event.target.value)
-                    setEngagement(+event.target.value)
-                  }
-                }
+                onChange={event => {
+                  console.log("engagement");
+                  console.log(+event.target.value);
+                  setEngagement(+event.target.value);
+                }}
                 min={sliderMin.toString()}
                 max={sliderMax.toString()}
                 step={sliderStep}
@@ -95,13 +116,11 @@ export default function RatingModal(props) {
               <p>{sliderMin}</p>
               <Form.Control
                 type="range"
-                onChange={event =>
-                  {
-                    console.log("energy");
-                    console.log(+event.target.value)
-                    setEnergy(+event.target.value)
-                  }
-                }
+                onChange={event => {
+                  console.log("energy");
+                  console.log(+event.target.value);
+                  setEnergy(+event.target.value);
+                }}
                 min={sliderMin.toString()}
                 max={sliderMax.toString()}
                 step={sliderStep}

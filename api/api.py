@@ -132,3 +132,20 @@ def activity_ratings():
             conn.close()
     else:
         return '/activity-ratings only accepts GET requests', 501
+
+@app.route('/all_activities', methods=['GET'])
+def all_activities():
+    if request.method == 'GET':
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(
+                '''SELECT * FROM activities'''
+            )
+            activities = cursor.fetchall()
+            return json.dumps({'activities': activities}), 200
+        finally:
+            cursor.close()
+            conn.close()
+    else:
+        return '/all_activities only accepts GET requests', 501
