@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { Select } from "react-bootstrap/Form";
-
+import InputGroup from "react-bootstrap/InputGroup";
 import "./RatingModal.css";
+import { FormControl } from "react-bootstrap";
 
 const defaultActivity = "None Specified";
 
@@ -28,6 +28,23 @@ const saveRatings = (engagement, energy, inFlow, activity) => {
     .then(data => console.log(data));
 };
 
+const addActivity = (activity, callback) => {
+  const requestOptions = {
+    method: "Post",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      activity:activity
+    })
+  }
+
+  fetch('/add-activity', requestOptions)
+    .then(response => response.json())
+    .then(data => {
+      console.log({data})
+      callback();
+    })
+}
+
 const updateActivityList = setActivityList => {
   console.log("updating activity list");
   const requestOptions = {
@@ -48,6 +65,7 @@ export default function RatingModal(props) {
   const [inFlow, setInFlow] = useState(false);
   const [activity, setActivity] = useState("None");
   const [activityList, setActivityList] = useState([]);
+  const [activityToAdd, setActivityToAdd] = useState("New Activity");
 
   useEffect(() => updateActivityList(setActivityList), []);
 
@@ -89,6 +107,27 @@ export default function RatingModal(props) {
                 return <option>{activity}</option>;
               })}
             </Form.Control>
+            <InputGroup className="mb-3">
+              <FormControl
+                value={activityToAdd}
+                aria-label="New Activity"
+                onChange={event => {
+                  setActivityToAdd(event.target.value);
+                }}
+              />
+              <Button variant="outline-secondary"
+                onClick={() => {
+                  console.log(activityToAdd);
+                  addActivity(activityToAdd, () => {
+                    updateActivityList(setActivityList)
+                    setActivityToAdd("New Activity")
+                  });
+                }}
+              >
+                Add new Activity
+              </Button>
+            </InputGroup>
+            <br/>
             <Form.Label> Engagement</Form.Label>
             <div className="slider">
               <p>{sliderMin}</p>
@@ -135,7 +174,7 @@ export default function RatingModal(props) {
           Close
         </Button>
         <Button
-          variant="secondary"
+          variant="primary"
           onClick={() => {
             boundSaveRatings();
             props.onCloseModal();

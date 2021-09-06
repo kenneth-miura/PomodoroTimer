@@ -40,6 +40,25 @@ def store_ratings():
             conn.close()
     else:
         return 'Only accepts POST', 501
+@app.route('/add-activity', methods=['POST'])
+def add_activity():
+    if request.method == 'POST':
+        json_data = request.json
+        activity = json_data['activity']
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(f'''INSERT INTO activities (name)
+            VALUES(%(activity)s)
+            ''', {'activity': activity})
+            conn.commit()
+            return json_data, 201
+        finally:
+            cursor.close()
+            conn.close()
+    else:
+        return '/add-activity only accepts POST', 501
+
 
 
 @app.route('/all-ratings', methods=['GET'])
