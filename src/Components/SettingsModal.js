@@ -2,6 +2,7 @@ import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import PropTypes from 'prop-types';
 
 export default function SettingsModal(props) {
   const [pomodoroDuration, setPomodoroDuration] = useState(props.defaultPomodoro)
@@ -21,7 +22,7 @@ export default function SettingsModal(props) {
             type="number"
             placeholder={pomodoroDuration}
             onChange={event => {
-              setPomodoroDuration(event.target.value);
+              setPomodoroDuration(parseInt(event.target.value));
             }}
           >
 
@@ -33,7 +34,7 @@ export default function SettingsModal(props) {
             type="number"
             placeholder={breakDuration}
             onChange={event => {
-              setBreakDuration(event.target.value);
+              setBreakDuration(parseInt(event.target.value));
             }}
           >
           </Form.Control>
@@ -49,4 +50,13 @@ export default function SettingsModal(props) {
       </Modal.Footer>
     </Modal>
   );
+}
+
+SettingsModal.propTypes = {
+  showModal: PropTypes.bool,
+  onCloseModal: PropTypes.func,
+  defaultPomodoro: PropTypes.number,
+  defaultBreak: PropTypes.number,
+  savePomodoroDuration: PropTypes.func,
+  saveBreakDuration: PropTypes.func
 }

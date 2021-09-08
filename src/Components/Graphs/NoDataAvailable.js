@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 /**
  * Page that explains which data is missing
  * @param {*} props
@@ -9,4 +10,8 @@ export default function NoDataAvailable(props){
 		<p>{props.message}</p>
 	</div>);
 
+}
+
+NoDataAvailable.propTypes = {
+	message : PropTypes.string
 }

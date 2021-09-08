@@ -5,6 +5,7 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import "./RatingModal.css";
 import { FormControl } from "react-bootstrap";
+import PropTypes from 'prop-types';
 
 const defaultActivity = "None Specified";
 
@@ -184,4 +185,9 @@ export default function RatingModal(props) {
       </Modal.Footer>
     </Modal>
   );
+}
+
+RatingModal.propTypes = {
+  showModal : PropTypes.bool,
+  onCloseModal : PropTypes.func
 }

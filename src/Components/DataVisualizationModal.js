@@ -10,6 +10,8 @@ import "./DataVisualizationModal.css";
 import TripleBarGraph from "./Graphs/TripleBarGraph";
 import DayScatterGraph from "./Graphs/DayScatterGraph";
 import NoDataAvailable from "./Graphs/NoDataAvailable";
+import PropTypes from 'prop-types';
+
 const barConfig = {
   avgEngagement: {
     name: "Average Engagement",
@@ -264,4 +266,9 @@ function fetchActivityRatings(setActivityRatings) {
       }));
       setActivityRatings(ratings);
     });
+}
+
+DataVisualizationModal.propTypes = {
+  showModal: PropTypes.bool,
+  onCloseModal: PropTypes.func
 }

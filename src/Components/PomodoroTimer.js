@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import RatingModal from "./RatingModal";
 import "./PomodoroTimer.css";
+import PropTypes from 'prop-types';
 
 const minutesToMilliseconds = minutes => {
   return minutes * 60000;
@@ -113,4 +114,9 @@ export default function PomodoroTimer(props) {
       ></RatingModal>
     </Container>
   );
+}
+
+PomodoroTimer.propTypes = {
+  pomodoroDuration: PropTypes.number,
+  breakDuration: PropTypes.number
 }

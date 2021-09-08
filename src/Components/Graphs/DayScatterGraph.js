@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import NoDataAvailable from "./NoDataAvailable";
 import moment from "moment";
+import PropTypes from 'prop-types';
 
 //primarily based off https://github.com/recharts/recharts/issues/1028 (USE THIS)
 
@@ -126,5 +127,11 @@ export default class DayScatterGraph extends PureComponent {
       </ResponsiveContainer>
     );
   }
-  //TODO: show the inflow stuff. Maybe change colour based on being inflowed
+}
+
+DayScatterGraph.propTypes = {
+  yAxisKey : PropTypes.string,
+  yAxisName : PropTypes.string,
+  inFlowData : PropTypes.array,
+  notInFlowData : PropTypes.array
 }

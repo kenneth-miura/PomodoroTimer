@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import NoDataAvailable from "./NoDataAvailable";
+import PropTypes from 'prop-types';
 
 
 export default class TripleBarGraph extends PureComponent {
@@ -46,4 +47,11 @@ export default class TripleBarGraph extends PureComponent {
       </ResponsiveContainer>
     );
   }
+}
+
+TripleBarGraph.propTypes = {
+  data : PropTypes.array,
+  xAxisKey : PropTypes.string,
+  barConfig : PropTypes.object,
+  noDataMessage : PropTypes.string
 }
