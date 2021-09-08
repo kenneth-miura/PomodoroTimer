@@ -115,17 +115,16 @@ def day_ratings():
         try:
             cursor.execute(
                 '''
-                SELECT (UNIX_TIMESTAMP(time_rated) * 1000) AS time_rated_ms, AVG(engagement) AS avg_engagement,
-                AVG(energy) AS avg_energy, AVG(in_flow) AS avg_in_flow
+                SELECT (UNIX_TIMESTAMP(time_rated) * 1000) AS time_rated_ms, engagement,
+                energy, in_flow, activity AS activity
                 FROM ratings
                 WHERE time_rated >=%(day_start)s AND time_rated <%(day_end)s AND in_flow=%(get_in_flow_only)s
-                GROUP BY time_rated;
                 ''', {"day_start": day_start, "day_end": day_end, "get_in_flow_only":get_in_flow_only}
             )
             day_ratings = cursor.fetchall()
             processed_day_ratings = []
             for rating in day_ratings:
-                processed_day_ratings.append((str(rating[0]), rating[1], rating[2], rating[3]))
+                processed_day_ratings.append((str(rating[0]), rating[1], rating[2], rating[3], rating[4]))
             return json.dumps({"day_ratings": processed_day_ratings}), 200
         finally:
             cursor.close()

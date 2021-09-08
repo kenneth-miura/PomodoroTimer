@@ -28,12 +28,12 @@
   border-color: transparent;
 }
 
-svg {
-  width: 30px;
+.svg-button {
   height: 30px;
+  width: 30px;
 }
 
-svg:hover {
+.svg-button:hover {
   fill: var(--light-accent);
 }
 

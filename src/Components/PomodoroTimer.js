@@ -15,15 +15,19 @@ const convertMillisecondsToTimeString = milliseconds => {
   if (milliseconds <= 0) {
     return "00:00";
   }
+  // Dealing with Epoch default starttime being 7 PM
+  var hours = date.getHours() - 19;
+  var minutes = date.getMinutes() + hours * 60;
   var minutesString =
-    date.getMinutes() === 0 ? "00" : String(date.getMinutes());
+    minutes === 0 ? "00" : String(minutes);
   var secondsString =
     date.getSeconds() === 0 ? "00" : String(date.getSeconds());
   return `${minutesString}: ${secondsString}`;
 };
 
 export default function PomodoroTimer(props) {
-  const defaultTimerDuration = minutesToMilliseconds(props.pomodoroDuration);
+  const [inPomodoro, setInPomodoro] = useState(true);
+  const defaultTimerDuration = minutesToMilliseconds( inPomodoro ? props.pomodoroDuration: props.breakDuration);
   const [timerStart, setTimerStart] = useState(
     Date.now() + defaultTimerDuration
   );
@@ -32,13 +36,16 @@ export default function PomodoroTimer(props) {
   const [showModal, setShowModal] = useState(false);
   const handleCloseModal = () => setShowModal(false);
 
+
   useEffect(() => {
     let intervalID;
     if (timerRunning) {
       intervalID = setInterval(() => {
         let remainingTime = timerStart - Date.now();
         if (remainingTime <= 0) {
-          setShowModal(true);
+          if (inPomodoro){
+            setShowModal(true);
+          }
           clearInterval(intervalID);
         }
         setTimeLeft(remainingTime);
@@ -63,10 +70,11 @@ export default function PomodoroTimer(props) {
             className="custom-button"
             variant="primary"
             onClick={() => {
-              setTimerStart(
-                Date.now() + minutesToMilliseconds(props.pomodoroDuration)
-              );
-              setTimerRunning(true);
+              let newTimerStart = Date.now() + minutesToMilliseconds(props.pomodoroDuration);
+              setTimerStart( newTimerStart);
+              setTimeLeft(minutesToMilliseconds(props.pomodoroDuration));
+              setTimerRunning(false);
+              setInPomodoro(true);
             }}
           >
             Pomodoro
@@ -75,10 +83,11 @@ export default function PomodoroTimer(props) {
             className="custom-button"
             variant="primary"
             onClick={() => {
-              setTimerStart(
-                Date.now() + minutesToMilliseconds(props.breakDuration)
-              );
-              setTimerRunning(true);
+              let newTimerStart = Date.now() + minutesToMilliseconds(props.breakDuration);
+              setTimerStart( newTimerStart);
+              setTimeLeft(minutesToMilliseconds(props.breakDuration));
+              setTimerRunning(false);
+              setInPomodoro(false);
             }}
           >
             Break

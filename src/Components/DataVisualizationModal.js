@@ -20,8 +20,10 @@ const barConfig = {
 };
 
 function allRatingsVisual(allRatings) {
-  if (allRatings.length === 0){
-    return <NoDataAvailable message="Sorry! No ratings found in the database"/>
+  if (allRatings.length === 0) {
+    return (
+      <NoDataAvailable message="Sorry! No ratings found in the database" />
+    );
   }
   return (
     <Table striped bordered>
@@ -65,10 +67,15 @@ export default function DataVisualizationModal(props) {
     fetchActivityRatings(setActivityRatings);
     fetchInFlowDayRatings(setInFlowDayRatings);
     fetchNotInFlowDayRatings(setNotInFlowDayRatings);
-  }
+  };
 
   return (
-    <Modal show={props.showModal} onHide={props.onCloseModal} size="xl" onEnter={onEnterModal}>
+    <Modal
+      show={props.showModal}
+      onHide={props.onCloseModal}
+      size="xl"
+      onEnter={onEnterModal}
+    >
       <Modal.Header closeButton>
         <Modal.Title> Data Visualization</Modal.Title>
       </Modal.Header>
@@ -183,9 +190,12 @@ function fetchWeeksRatings(setWeekRatings) {
 }
 
 function fetchInFlowDayRatings(setInFlowDayRatings) {
-  var weeksRatingUrl = "/day-ratings?" + new URLSearchParams({
-    'get_in_flow': true
-  });
+  var weeksRatingUrl =
+    "/day-ratings?" +
+    new URLSearchParams({
+      get_in_flow: true,
+    });
+
 
   const requestOptions = {
     method: "GET",
@@ -194,20 +204,27 @@ function fetchInFlowDayRatings(setInFlowDayRatings) {
   fetch(weeksRatingUrl, requestOptions)
     .then(response => response.json())
     .then(data => {
-      const dayRatings = data["day_ratings"].map(entry => ({
-        timeInMS: parseInt(entry[0]),
-        engagement: entry[1],
-        energy: entry[2],
-        inFlow: entry[3],
-      }));
+
+      const dayRatings = data["day_ratings"].map(entry => {
+        console.log({entry});
+        return ({
+          timeInMS: parseInt(entry[0]),
+          engagement: entry[1],
+          energy: entry[2],
+          inFlow: entry[3],
+          activity: entry[4]
+        });
+      });
       setInFlowDayRatings(dayRatings);
     });
 }
 
 function fetchNotInFlowDayRatings(setNotInFlowDayRatings) {
-  var weeksRatingUrl = "/day-ratings?" + new URLSearchParams({
-    'get_in_flow': false
-  });
+  var weeksRatingUrl =
+    "/day-ratings?" +
+    new URLSearchParams({
+      get_in_flow: false,
+    });
 
   const requestOptions = {
     method: "GET",
@@ -216,12 +233,17 @@ function fetchNotInFlowDayRatings(setNotInFlowDayRatings) {
   fetch(weeksRatingUrl, requestOptions)
     .then(response => response.json())
     .then(data => {
-      const dayRatings = data["day_ratings"].map(entry => ({
+      const dayRatings = data["day_ratings"].map(entry => {
+        console.log({entry});
+     return ({
         timeInMS: parseInt(entry[0]),
         engagement: entry[1],
         energy: entry[2],
         inFlow: entry[3],
-      }));
+        activity: entry[4]
+      })
+      }
+   );
       setNotInFlowDayRatings(dayRatings);
     });
 }

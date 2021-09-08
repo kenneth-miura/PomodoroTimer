@@ -54,7 +54,6 @@ const updateActivityList = setActivityList => {
   fetch("/all_activities", requestOptions)
     .then(response => response.json())
     .then(data => {
-      console.log({ data });
       setActivityList(data["activities"]);
     });
 };

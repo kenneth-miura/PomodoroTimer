@@ -16,17 +16,6 @@ import moment from "moment";
 
 //primarily based off https://github.com/recharts/recharts/issues/1028 (USE THIS)
 
-const CustomTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    let timestamp = moment(payload[0]["value"]).format("HH:mm");
-    return (
-      <div className="custom-tooltip">
-        <p className="label">{`Time:${timestamp}`}</p>
-      </div>
-    );
-  }
-  return null;
-};
 export default class DayScatterGraph extends PureComponent {
   constructor(props) {
     super(props);
@@ -64,6 +53,24 @@ export default class DayScatterGraph extends PureComponent {
       return moment(tickItem).format("HH");
     }
   };
+  CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      console.log({payload})
+      console.log({label});
+      let activity = payload[0]["payload"]["activity"]
+      let timestamp = moment(payload[0]["value"]).format("HH:mm");
+      let yAxisInfo = payload[1]["value"]
+
+      return (
+        <div className="custom-tooltip">
+          <p className="label">{`Activity: ${activity}`}</p>
+          <p className="label">{`Time:${timestamp}`}</p>
+          <p className="label">{`${this.props.yAxisName}: ${yAxisInfo}`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   // look into tickformatter
   render() {
@@ -71,6 +78,7 @@ export default class DayScatterGraph extends PureComponent {
       return <NoDataAvailable message="Sorry! No ratings for today were found in the database!" />;
     }
 
+    console.log(this.props.notInFlowData);
     return (
       <ResponsiveContainer width="100%" height={600}>
         <ScatterChart
@@ -95,7 +103,6 @@ export default class DayScatterGraph extends PureComponent {
           >
             <Label value="Hour" offset={-3} position="insideBottom"></Label>
           </XAxis>
-          <XAxis name="inflow" dataKey="inFlow" hide={true} />
           <YAxis
             type="number"
             dataKey={this.props.yAxisKey}
@@ -105,7 +112,7 @@ export default class DayScatterGraph extends PureComponent {
           </YAxis>
           <Tooltip
             cursor={{ strokeDasharray: "3 3" }}
-            content={<CustomTooltip />}
+            content={<this.CustomTooltip />}
           />
           <Scatter name="In Flow" data={this.props.inFlowData} fill="#FF12FF" />
           <Scatter
