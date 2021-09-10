@@ -112,6 +112,7 @@ export default function PomodoroTimer(props) {
         showModal={showModal}
         onCloseModal={handleCloseModal}
       ></RatingModal>
+      {timeLeft <= 0 ? <audio autoPlay src={'get-timer-sound'}/> : null}
     </Container>
   );
 }

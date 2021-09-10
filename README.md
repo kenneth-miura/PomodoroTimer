@@ -1,6 +1,8 @@
 The Pomodoro Webapp project is a project to build a Pomodoro timer with variable length for breaks & Pomodoro. It will also have a dialogue that opens at end of Pomodoro.   The dialogue lets you name the exercise you did for the last Pomodoro, and rate engagement & flow state, energy level.  It will provide a page for visualizing the data you input from the dialogue.
 
 # Setup
+## Installation of Dependencies
+Use NPM
 ## Database
 This project uses MySQL.
 

@@ -1,10 +1,13 @@
 import time
-from flask import Flask, request
+from flask import Flask, request, send_from_directory
 from flaskext.mysql import MySQL
 from datetime import datetime, date, time, timedelta
 import simplejson as json
 
-app = Flask(__name__)
+app = Flask(__name__,
+    static_url_path='',
+    static_folder='static'
+)
 app.config.from_object('config.Config')
 
 mysql = MySQL()
@@ -167,3 +170,15 @@ def all_activities():
             conn.close()
     else:
         return '/all_activities only accepts GET requests', 501
+
+
+@app.route('/get-timer-sound', methods=['GET'])
+def get_timer_sound():
+    if request.method == "GET":
+        try:
+            return send_from_directory(directory = app.static_folder, path="alarm.mp3")
+        except Exception as e:
+            print(e)
+            return '/get-timer-sound', 501
+
+
